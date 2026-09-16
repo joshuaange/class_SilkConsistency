@@ -82,6 +82,8 @@ struct thermodynamics
 
   short compute_damping_scale; /**< do we want to compute the simplest analytic approximation to the photon damping (or diffusion) scale? */
 
+  double thomson_rescaling; /** dimensionless rescaling A_d, as in FFAT */
+
   /** parameters for interacting dark matter */
 
   short has_idm_b;    /**< Do we have idm with baryons? */

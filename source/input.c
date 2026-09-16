@@ -2370,6 +2370,7 @@ int input_read_parameters_general(struct file_content * pfc,
   /** 9) Damping scale */
   /* Read */
   class_read_flag_or_deprecated("compute_damping_scale","compute damping scale",pth->compute_damping_scale);
+  class_read_double("thomson_rescaling",pth->thomson_rescaling);
 
   /** 10) Varying fundamental constants */
   class_call(parser_read_string(pfc,"varying_fundamental_constants",&string1,&flag1,errmsg),
@@ -5924,6 +5925,7 @@ int input_default_params(struct background *pba,
 
   /** 9) Damping scale */
   pth->compute_damping_scale = _FALSE_;
+  pth->thomson_rescaling = 1.;
 
   /** 10) Varying fundamental constants */
   pba->varconst_dep = varconst_none;
