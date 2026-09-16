@@ -425,6 +425,8 @@ struct perturbations
   double * selection_tau; /**< value of conformal time at the center of each bin */
   double * selection_function; /**< selection function W(tau), normalized to \f$ \int W(tau) dtau=1 \f$, stored in selection_function[bin*ppt->tau_size+index_tau] */
 
+  double phenomenological_damping_tail; /** phenomenological tail damping ell_d */
+
   //@}
 
   /** @name - source functions interpolation table */

@@ -1373,6 +1373,32 @@ int harmonic_compute_cl(
     free(transfer_ic2_nc);
   }
 
+  if (ppt->phenomenological_damping_tail > 0.) {
+      /* Default value of 0 means no extra damping */
+      double damping;
+      damping = exp(-pow(l/ppt->phenomenological_damping_tail,2.));
+
+      if (phr->has_tt == _TRUE_)
+        phr->cl[index_md]
+          [(index_l * phr->ic_ic_size[index_md] + index_ic1_ic2) * phr->ct_size + phr->index_ct_tt]
+          *= damping;
+
+      if (phr->has_ee == _TRUE_)
+        phr->cl[index_md]
+          [(index_l * phr->ic_ic_size[index_md] + index_ic1_ic2) * phr->ct_size + phr->index_ct_ee]
+          *= damping;
+
+      if (phr->has_te == _TRUE_)
+        phr->cl[index_md]
+          [(index_l * phr->ic_ic_size[index_md] + index_ic1_ic2) * phr->ct_size + phr->index_ct_te]
+          *= damping;
+
+      if (phr->has_bb == _TRUE_)
+        phr->cl[index_md]
+          [(index_l * phr->ic_ic_size[index_md] + index_ic1_ic2) * phr->ct_size + phr->index_ct_bb]
+          *= damping;
+  }
+
   return _SUCCESS_;
 
 }
