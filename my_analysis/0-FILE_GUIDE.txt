@@ -1,0 +1,8 @@
+power_spectra_plots.ipynb : 
+    - This is the original script used to test that the variables behave as expected, for both A_d and ell_d
+    - Includes plots for TT, TE, EE, and BB spectra with different values ("Power Spectra, and Parameter Effects")
+    - Produces the various rescale .ini files in my_analysis/ and the outputs in output/
+    - Includes plots for 1D likelihood scans from 1D_parameter_scan.py ("1D Parameter Scans on Planck")
+1D_parameter_scan.py :
+    - Performs 1D parameter scans independently across A_d and ell_d with Planck likelihoods and fiducial cosmology.
+    - Produces scan_ell_d.txt and scan_A_d.txt
