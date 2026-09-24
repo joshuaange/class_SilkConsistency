@@ -2371,6 +2371,8 @@ int input_read_parameters_general(struct file_content * pfc,
   /* Read */
   class_read_flag_or_deprecated("compute_damping_scale","compute damping scale",pth->compute_damping_scale);
   class_read_double("thomson_rescaling",pth->thomson_rescaling);
+  class_read_double("thomson_rescaling_z",pth->thomson_rescaling_z);
+  class_read_double("thomson_rescaling_dz",pth->thomson_rescaling_dz); 
   class_read_double("phenomenological_damping_tail",ppt->phenomenological_damping_tail);
 
   /** 10) Varying fundamental constants */
@@ -5927,6 +5929,8 @@ int input_default_params(struct background *pba,
   /** 9) Damping scale */
   pth->compute_damping_scale = _FALSE_;
   pth->thomson_rescaling = 1.;
+  pth->thomson_rescaling_z = 200.;   /* negative => old behaviour, rescaling at all z */
+  pth->thomson_rescaling_dz = 20.;
   ppt->phenomenological_damping_tail = 0.;
 
   /** 10) Varying fundamental constants */
