@@ -1,0 +1,85 @@
+# ACT DR6 (ACT-lite TT,TE,EE) + Planck Sroll2 low-ell EE (for tau): LCDM + ell_d
+theory:
+  classy:
+    path: global
+    extra_args:
+      N_ur: 2.0328
+      N_ncdm: 1
+      m_ncdm: 0.06
+
+likelihood:
+  act_dr6_cmbonly.ACTDR6CMBonly:      # ACT DR6 TT,TE,EE, 600 < ell < 6500; samples A_act, P_act
+    stop_at_error: true
+  planck_2018_lowl.EE_sroll2: null    # large-scale EE, constrains tau (ACT can't on its own)
+
+# ACT's calibration prior (from Planck's dipole calibration), as in ACT's baseline
+prior:
+  cal_dip_prior: "lambda A_act: stats.norm.logpdf(A_act, loc=1.0, scale=0.003)"
+
+params:
+  # new params
+  # eps_d = (1000/ell_d)^2: LCDM is eps_d = 0; eps_d <= 0.05 means ell_d >= ~4500
+  eps_d:
+    prior: {min: 0.0, max: 0.05}
+    ref: {dist: norm, loc: 0.001, scale: 0.0005}
+    proposal: 0.001
+    latex: \epsilon_d \equiv (1000/\ell_d)^2
+    drop: true
+  phenomenological_damping_tail:
+    value: "lambda eps_d: 1000/np.sqrt(eps_d) if eps_d > 0 else 0."
+    derived: false
+  ell_d:
+    derived: "lambda eps_d: 1000/np.sqrt(eps_d) if eps_d > 0 else np.inf"
+    latex: \ell_d
+  # LCDM sampled params
+  omega_b:
+    prior: {min: 0.005, max: 0.1}
+    ref: {dist: norm, loc: 0.02259, scale: 0.0001}
+    proposal: 0.0001
+    latex: \Omega_\mathrm{b} h^2
+  omega_cdm:
+    prior: {min: 0.001, max: 0.99}
+    ref: {dist: norm, loc: 0.1238, scale: 0.001}
+    proposal: 0.001
+    latex: \Omega_\mathrm{c} h^2
+  theta_s_100:
+    prior: {min: 0.5, max: 10}
+    ref: {dist: norm, loc: 1.0418, scale: 0.0003}
+    proposal: 0.0002
+    latex: 100\theta_\mathrm{s}
+    drop: true
+  100*theta_s:
+    value: "lambda theta_s_100: theta_s_100"
+    derived: false
+  logA:
+    prior: {min: 1.61, max: 3.91}
+    ref: {dist: norm, loc: 3.053, scale: 0.01}
+    proposal: 0.01
+    latex: \log(10^{10} A_\mathrm{s})
+    drop: true
+  ln10^{10}A_s:
+    value: "lambda logA: logA"
+    derived: false
+  n_s:
+    prior: {min: 0.8, max: 1.2}
+    ref: {dist: norm, loc: 0.9666, scale: 0.005}
+    proposal: 0.004
+    latex: n_\mathrm{s}
+  tau_reio:
+    prior: {min: 0.01, max: 0.8}
+    ref: {dist: norm, loc: 0.0562, scale: 0.006}
+    proposal: 0.003
+    latex: \tau_\mathrm{reio}
+  # Derived
+  H0:
+    latex: H_0
+  z_rec:
+    latex: z_\mathrm{rec}
+
+sampler:
+  mcmc:
+    covmat: auto
+    Rminus1_stop: 0.01
+    max_tries: 10000
+
+output: chains/ACT_MCMC_ell_d
