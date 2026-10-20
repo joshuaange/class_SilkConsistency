@@ -426,6 +426,7 @@ struct perturbations
   double * selection_function; /**< selection function W(tau), normalized to \f$ \int W(tau) dtau=1 \f$, stored in selection_function[bin*ppt->tau_size+index_tau] */
 
   double phenomenological_damping_tail; /** phenomenological tail damping ell_d */
+  double phenomenological_damping_eps;  /** signed envelope exp[-eps (l/1000)^2]: eps>0 damps, eps<0 boosts */
 
   //@}
 
