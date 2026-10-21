@@ -1,0 +1,82 @@
+# Planck TT,TE,EE + lowE + lensing + DESI DR2 BAO: LCDM + eps_d (signed damping envelope)
+theory:
+  classy:
+    path: global
+    extra_args:
+      N_ur: 2.0328
+      N_ncdm: 1
+      m_ncdm: 0.06
+
+likelihood:
+  planck_2018_lowl.TT: null
+  planck_2018_lowl.EE: null
+  planck_2018_highl_plik.TTTEEE_lite_native: null    # A_planck is sampled automatically
+  planck_2018_lensing.native: null                   # lensing
+  bao.desi_dr2.desi_bao_all: null                    # DESI DR2 BAO (all tracers)
+
+params:
+  # new params
+  # Signed damping envelope: C_l -> C_l exp[-eps_d (l/1000)^2], applied to the unlensed spectra.
+  # eps_d > 0: extra damping (eps_d = (1000/l_d)^2); eps_d < 0: extra small-scale power; LCDM is eps_d = 0.
+  # Needs the CLASS input `phenomenological_damping_eps` (signed_eps.patch).
+  eps_d:
+    prior: {min: -0.05, max: 0.05}
+    ref: {dist: norm, loc: 0.0, scale: 0.001}
+    proposal: 0.001
+    latex: \epsilon_d
+    drop: true
+  phenomenological_damping_eps:
+    value: "lambda eps_d: eps_d"
+    derived: false
+  # LCDM sampled params
+  omega_b:
+    prior: {min: 0.005, max: 0.1}
+    ref: {dist: norm, loc: 0.02237, scale: 0.0001}
+    proposal: 0.0001
+    latex: \Omega_\mathrm{b} h^2
+  omega_cdm:
+    prior: {min: 0.001, max: 0.99}
+    ref: {dist: norm, loc: 0.1200, scale: 0.001}
+    proposal: 0.0005
+    latex: \Omega_\mathrm{c} h^2
+  theta_s_100:
+    prior: {min: 0.5, max: 10}
+    ref: {dist: norm, loc: 1.0418, scale: 0.0003}
+    proposal: 0.0002
+    latex: 100\theta_\mathrm{s}
+    drop: true
+  100*theta_s:
+    value: "lambda theta_s_100: theta_s_100"
+    derived: false
+  logA:
+    prior: {min: 1.61, max: 3.91}
+    ref: {dist: norm, loc: 3.044, scale: 0.01}
+    proposal: 0.01
+    latex: \log(10^{10} A_\mathrm{s})
+    drop: true
+  ln10^{10}A_s:
+    value: "lambda logA: logA"
+    derived: false
+  n_s:
+    prior: {min: 0.8, max: 1.2}
+    ref: {dist: norm, loc: 0.9649, scale: 0.004}
+    proposal: 0.002
+    latex: n_\mathrm{s}
+  tau_reio:
+    prior: {min: 0.01, max: 0.8}
+    ref: {dist: norm, loc: 0.0544, scale: 0.006}
+    proposal: 0.003
+    latex: \tau_\mathrm{reio}
+  # Derived
+  H0:
+    latex: H_0
+  z_rec:
+    latex: z_\mathrm{rec}
+
+sampler:
+  mcmc:
+    covmat: auto            # starts from the closest Planck covariance; learns eps_d's row
+    Rminus1_stop: 0.01
+    max_tries: 10000
+
+output: chains/Planck_LB_MCMC_eps_d

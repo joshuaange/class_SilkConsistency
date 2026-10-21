@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=Planck_MCMC_ell_d_noLensing
+#SBATCH --job-name=ACT_B_MCMC_eps_d
 #SBATCH --account=hill
 #SBATCH --nodes=1
 #SBATCH --ntasks=4                # 4 MPI processes = 4 MCMC chains
-#SBATCH --cpus-per-task=8         # 8 CLASS threads per chain (4 x 8 = 32 cores)
-#SBATCH --mem-per-cpu=500M
-#SBATCH --time=2-00:00:00
-#SBATCH --output=logs/%x_%j.out   # create the logs/ folder before submitting
+#SBATCH --cpus-per-task=8         # 8 CLASS threads per chain
+#SBATCH --mem-per-cpu=500M        # ~16 GB total; the chains need only a few GB
+#SBATCH --time=4-00:00:00         # ACT needs CLASS up to ell = 9000, so this run is slower
+#SBATCH --output=logs/%x_%j.out
 
 module load openmpi/4.1.6-gcc11
 source ~/envs/ange_cosmology/bin/activate
@@ -16,8 +16,9 @@ echo "Slurm: SLURM_CPUS_PER_TASK=$SLURM_CPUS_PER_TASK, job $SLURM_JOB_ID"
 
 cd $SLURM_SUBMIT_DIR
 
-mpirun -np $SLURM_NTASKS --bind-to none -x OMP_NUM_THREADS cobaya-run Planck_MCMC_ell_d_noLensing.yaml -p ../packages --resume
+mpirun -np $SLURM_NTASKS --bind-to none --mca btl ^openib -x OMP_NUM_THREADS \
+    cobaya-run ACT_B_MCMC_eps_d.yaml -p ../packages --resume
 
 # Run with 
 #   - source ~/envs/ange_cosmology/bin/activate
-#   - sbatch run_Planck_MCMC_ell_d_noLensing.sh
+#   - sbatch run_ACT_B_MCMC_eps_d.sh

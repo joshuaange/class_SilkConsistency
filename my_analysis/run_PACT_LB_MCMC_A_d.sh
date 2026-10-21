@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ACT_MCMC_ell_d
+#SBATCH --job-name=PACT_LB_MCMC_A_d
 #SBATCH --account=hill
 #SBATCH --nodes=1
 #SBATCH --ntasks=4                # 4 MPI processes = 4 MCMC chains
@@ -17,8 +17,8 @@ echo "Slurm: SLURM_CPUS_PER_TASK=$SLURM_CPUS_PER_TASK, job $SLURM_JOB_ID"
 cd $SLURM_SUBMIT_DIR
 
 mpirun -np $SLURM_NTASKS --bind-to none --mca btl ^openib -x OMP_NUM_THREADS \
-    cobaya-run ACT_MCMC_ell_d.yaml -p ../packages --resume
+    cobaya-run PACT_LB_MCMC_A_d.yaml -p ../packages --resume
 
 # Run with 
 #   - source ~/envs/ange_cosmology/bin/activate
-#   - sbatch run_ACT_MCMC_ell_d.sh
+#   - sbatch run_PACT_LB_MCMC_A_d.sh
