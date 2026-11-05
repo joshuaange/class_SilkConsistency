@@ -1,0 +1,70 @@
+# Injection-recovery test: mock Neff spectra (ACT/P-ACT-like noise), fit with LCDM + eps_d
+theory:
+  classy:
+    path: global
+    extra_args:
+      N_ur: 2.0328          # the FIT always assumes standard N_eff,
+      N_ncdm: 1             # even when the mock was made with extra N_eff
+      m_ncdm: 0.06
+likelihood:
+  mock_cmb.MockCMB:
+    python_path: .          # mock_cmb.py must be in the folder you run from
+    mock_file: mock_Neff.npz
+prior:
+  tau_prior: "lambda tau_reio: stats.norm.logpdf(tau_reio, loc=0.0544, scale=0.007)"  # stands in for low-ell EE
+params:
+  eps_d:
+    prior: {min: -0.05, max: 0.05}
+    ref: {dist: norm, loc: 0.0, scale: 0.001}
+    proposal: 0.001
+    latex: \epsilon_d
+    drop: true
+  phenomenological_damping_eps:
+    value: "lambda eps_d: eps_d"
+    derived: false
+  omega_b:
+    prior: {min: 0.005, max: 0.1}
+    ref: {dist: norm, loc: 0.02237, scale: 0.0001}
+    proposal: 0.0001
+    latex: \Omega_\mathrm{b} h^2
+  omega_cdm:
+    prior: {min: 0.001, max: 0.99}
+    ref: {dist: norm, loc: 0.1200, scale: 0.001}
+    proposal: 0.0005
+    latex: \Omega_\mathrm{c} h^2
+  theta_s_100:
+    prior: {min: 0.5, max: 10}
+    ref: {dist: norm, loc: 1.0419, scale: 0.0003}
+    proposal: 0.0002
+    latex: 100\theta_\mathrm{s}
+    drop: true
+  100*theta_s:
+    value: "lambda theta_s_100: theta_s_100"
+    derived: false
+  logA:
+    prior: {min: 1.61, max: 3.91}
+    ref: {dist: norm, loc: 3.044, scale: 0.01}
+    proposal: 0.01
+    latex: \log(10^{10} A_\mathrm{s})
+    drop: true
+  ln10^{10}A_s:
+    value: "lambda logA: logA"
+    derived: false
+  n_s:
+    prior: {min: 0.8, max: 1.2}
+    ref: {dist: norm, loc: 0.9649, scale: 0.004}
+    proposal: 0.002
+    latex: n_\mathrm{s}
+  tau_reio:
+    prior: {min: 0.01, max: 0.8}
+    ref: {dist: norm, loc: 0.0544, scale: 0.006}
+    proposal: 0.003
+    latex: \tau_\mathrm{reio}
+  H0:
+    latex: H_0
+sampler:
+  mcmc:
+    covmat: auto
+    Rminus1_stop: 0.01
+    max_tries: 10000
+output: chains/Mock_Neff_MCMC_eps_d
