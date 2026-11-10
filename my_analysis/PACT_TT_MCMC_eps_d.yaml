@@ -4,9 +4,48 @@ theory:
   classy:
     path: global
     extra_args:
-      N_ur: 2.0328
+      # ---- CLASS settings of the ACT DR6 analysis: Calabrese et al. 2025 (arXiv:2503.14454), Appendix A ----
       N_ncdm: 1
       m_ncdm: 0.06
+      N_ur: 2.0308
+      T_cmb: 2.7255
+      YHe: BBN
+      non_linear: hmcode
+      hmcode_version: '2020'
+      recombination: HyRec
+      lensing: 'yes'
+      output: tCl pCl lCl mPk
+      modes: s
+      l_max_scalars: 9500
+      delta_l_max: 1800
+      P_k_max_h/Mpc: 100.
+      l_logstep: 1.025
+      l_linstep: 20
+      perturbations_sampling_stepsize: 0.05
+      l_switch_limber: 30.
+      hyper_sampling_flat: 32.
+      l_max_g: 40
+      l_max_ur: 35
+      l_max_pol_g: 60
+      ur_fluid_approximation: 2
+      ur_fluid_trigger_tau_over_tau_k: 130.
+      radiation_streaming_approximation: 2
+      radiation_streaming_trigger_tau_over_tau_k: 240.
+      hyper_flat_approximation_nu: 7000.
+      transfer_neglect_delta_k_S_t0: 0.17
+      transfer_neglect_delta_k_S_t1: 0.05
+      transfer_neglect_delta_k_S_t2: 0.17
+      transfer_neglect_delta_k_S_e: 0.17
+      accurate_lensing: 1
+      start_small_k_at_tau_c_over_tau_h: 0.0004
+      start_large_k_at_tau_h_over_tau_k: 0.05
+      tight_coupling_trigger_tau_c_over_tau_h: 0.005
+      tight_coupling_trigger_tau_c_over_tau_k: 0.008
+      start_sources_at_tau_c_over_tau_h: 0.006
+      l_max_ncdm: 30
+      tol_ncdm_synchronous: 1.e-6
+      # ---- not in ACT's block: only switches on the damping-scale output rd_star (spectra unchanged) ----
+      compute_damping_scale: 'yes'
 
 likelihood:
   act_split.ACTDR6CMBonlySplit:       # ACT DR6 TT ONLY (600 < ell < 6500); see act_split.py
@@ -46,17 +85,17 @@ params:
     derived: false
   # LCDM sampled params
   omega_b:
-    prior: {min: 0.005, max: 0.1}
+    prior: {min: 0.015, max: 0.030}     # bounded: wild points can crash CLASS
     ref: {dist: norm, loc: 0.02259, scale: 0.0001}
     proposal: 0.0001
     latex: \Omega_\mathrm{b} h^2
   omega_cdm:
-    prior: {min: 0.001, max: 0.99}
+    prior: {min: 0.08, max: 0.20}
     ref: {dist: norm, loc: 0.1238, scale: 0.001}
     proposal: 0.001
     latex: \Omega_\mathrm{c} h^2
   theta_s_100:
-    prior: {min: 0.5, max: 10}
+    prior: {min: 1.03, max: 1.055}
     ref: {dist: norm, loc: 1.0418, scale: 0.0003}
     proposal: 0.0002
     latex: 100\theta_\mathrm{s}
@@ -88,11 +127,22 @@ params:
     latex: H_0
   z_rec:
     latex: z_\mathrm{rec}
+  # extra derived outputs (do not affect the fit)
+  rs_rec:
+    latex: r_{s,\mathrm{rec}}
+  z_star:
+    latex: z_*
+  rd_star:
+    latex: r_{d,*}
+  z_d:
+    latex: z_\mathrm{drag}
+  rs_d:
+    latex: r_\mathrm{drag}
 
 sampler:
   mcmc:
-    covmat: auto
+    covmat: chains/PACT_TT_MCMC_eps_d.covmat   # proposal from the old run (same parameters)
     Rminus1_stop: 0.01
     max_tries: 10000
 
-output: chains/PACT_TT_MCMC_eps_d
+output: chains/PACT_TT_MCMC_eps_d_actprec

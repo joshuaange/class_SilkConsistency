@@ -4,8 +4,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=4                # 4 MPI processes = 4 MCMC chains
 #SBATCH --cpus-per-task=8         # 8 CLASS threads per chain (4 x 8 = 32 cores)
-#SBATCH --mem-per-cpu=500M
-#SBATCH --time=2-00:00:00
+#SBATCH --mem-per-cpu=3G          # ~96 GB total
+#SBATCH --time=4-00:00:00         # ACT-precision CLASS is ~4x slower; if it times out, sbatch again (--resume continues)
 #SBATCH --output=logs/%x_%j.out   # create the logs/ folder before submitting
 
 module load openmpi/4.1.6-gcc11
